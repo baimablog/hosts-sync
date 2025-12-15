@@ -67,7 +67,7 @@ jobs:
       - name: 镜像到 Gitee
         uses: Yikun/hub-mirror-action@master
         with:
-          src_repo: ${{ github.repository }}          # 自动= owner/repo
-          dst_repo: ${{ gitee giee.reposito
+          src: 'github/${{ github.repository }}'
+          dst: 'gitee/${{ github.repository }}'
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           static_list: ${{ github.ref_name }}
