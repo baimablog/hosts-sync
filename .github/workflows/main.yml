@@ -63,11 +63,12 @@ jobs:
             git commit -m "chore: auto update hosts $(date '+%m%d-%H%M')"
             git push origin HEAD:${{ github.ref_name }}
           )
-
+          
       - name: 镜像到 Gitee
         uses: Yikun/hub-mirror-action@v1.3
         with:
-          src_repo: ${{ github.repository }}   # 自动= owner/repo
-          dst_repo: ${{ github.repository }}   # 默认同名
+          src_repo: ${{ github.repository }}
+          dst_repo: ${{ github.repository }}
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
-          account_type: user                   # 个人仓库填 user
+          clone_style: ssh          # 用 ssh 方式，不装 GitPython
+          account_type: user
