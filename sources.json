@@ -1,5 +1,3 @@
 {
-  "google": "https://cdn.jsdelivr.net/gh/ineo6/hosts@master/hosts",
-  "github": "https://cdn.jsdelivr.net/gh/Licoy/fetch-github-hosts@master/hosts",
-  "steam": "https://cdn.jsdelivr.net/gh/SteamDatabase/SteamDatabase@master/hosts"
+  "github": "https://gitlab.com/ineo6/hosts/-/raw/master/hosts",
 }
