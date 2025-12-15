@@ -34,7 +34,7 @@ jobs:
           )
 
       - name: 镜像到 Gitee
-        uses: Yikun/hub-mirror-action@v1.3
+        uses: Yikun/hub-mirror-action@v1.2
         with:
           src_repo: ${{ github.repository }}
           dst_repo: ${{ github.repository }}
