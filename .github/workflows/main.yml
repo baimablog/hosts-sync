@@ -71,6 +71,8 @@ jobs:
           src: github/baimablog
           # 支持Gitee, Github, Gitlab and Gitcode
           dst: gitee/debug404
+          clone_style: ssh                            
+          src_key: ${{ secrets.SSH_PRIVATE_KEY }}     
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
           static_list: ${{github.event.repository.name}}
