@@ -1,0 +1,73 @@
+name: 同步多源 hosts 并推送到 Gitee
+
+on:
+  schedule:
+    # 下面这一行会被脚本动态改成 UTC 时间，无需手动算
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+    inputs:
+      run_now:
+        description: "立即运行一次"
+        required: false
+        default: "true"
+
+env:
+  TZ: Asia/Shanghai
+  # ★★★ 只需改这里 ★★★
+  BEIJING_TIME: "23:00"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 自动计算 UTC cron
+        id: cron
+        run: |
+          h=${BEIJING_TIME%:*}
+          m=${BEIJING_TIME#*:}
+          # 北京时间转 UTC（减 8 小时）
+          total=$(( (h*60 + m - 480 + 1440) % 1440 ))
+          u_h=$(( total / 60 ))
+          u_m=$(( total % 60 ))
+          echo "utc_cron=$u_m $u_h * * *" >> $GITHUB_OUTPUT
+          # 动态覆写 workflow 的 schedule
+          curl -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/update-hosts.yml \
+            -d "{\"schedule\":[{\"cron\":\"$u_m $u_h * * *\"}]}"
+
+      - name: Checkout self
+        uses: actions/checkout@v4
+
+      - name: 读取源列表
+        id: sources
+        run: |
+          echo "list=$(jq -r 'keys[]' sources.json | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: 下载各源 hosts
+        run: |
+          for name in ${{ steps.sources.outputs.list }}; do
+            url=$(jq -r ".[\"$name\"]" sources.json)
+            echo ">>> 获取 $name  from $url"
+            curl -fsSL "$url" -o "$name" || echo "# 下载失败：$name" > "$name"
+            echo -e "\n# Update: $(date '+%F %T')\n# Source: $url" >> "$name"
+          done
+
+      - name: 提交到 GitHub
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || (
+            git commit -m "chore: auto update hosts $(date '+%m%d-%H%M')"
+            git push origin HEAD:${{ github.ref_name }}
+          )
+
+      - name: 镜像到 Gitee
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: 'github/baimablog/hosts-sync'
+          dst: 'gitee/debug404/hosts-sync'
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          static_list: ${{ github.ref_name }}
