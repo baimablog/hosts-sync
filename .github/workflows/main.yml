@@ -64,10 +64,17 @@ jobs:
             git push origin HEAD:${{ github.ref_name }}
           )
 
-      - name: 镜像到 Gitee
-        uses: Yikun/hub-mirror-action@v1.3
+      - name: Mirror the Github organization repos to Gitee.
+        uses: Yikun/hub-mirror-action@master
         with:
-          src: 'github/${{ github.repository }}'
-          dst: 'gitee/${{ github.repository }}'
+          # 支持Gitee, Github, Gitlab and Gitcode
+          src: github/baimablog
+          # 支持Gitee, Github, Gitlab and Gitcode
+          dst: gitee/debug404
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
-          static_list: ${{ github.ref_name }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          # 支持Github/Gitee/Gitcode的用户、组织以及Gitlab的组
+          account_type: org
+          # 支持分别设置源和目的端的类型
+          # src_account_type: org
+          # dst_account_type: org}}
