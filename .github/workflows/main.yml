@@ -12,10 +12,12 @@ jobs:
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
+        with:
+          # 需要完整历史，否则无法 push
+          fetch-depth: 0
 
       - name: 下载各源 hosts
         run: |
-          # 根据 sources.json 依次下载
           for name in $(jq -r 'keys[]' sources.json); do
             url=$(jq -r ".[\"$name\"]" sources.json)
             echo ">>> 获取 $name  from $url"
@@ -33,11 +35,15 @@ jobs:
             git push origin HEAD:${{ github.ref_name }}
           )
 
-      - name: 镜像到 Gitee
-        uses: Yikun/hub-mirror-action@v1.2
+      # 一键推到 Gitee
+      - name: 安装 SSH 密钥
+        uses: shimataro/ssh-key-action@v2
         with:
-          src_repo: ${{ github.repository }}
-          dst_repo: ${{ github.repository }}
-          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
-          clone_style: ssh
-          account_type: user
+          key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          name: gitee_key
+          known_hosts: unnecessary
+
+      - name: 推送镜像到 Gitee
+        run: |
+          git remote set-url --add --push origin git@gitee.com:${{ github.repository }}.git
+          git push origin HEAD:${{ github.ref_name }}
