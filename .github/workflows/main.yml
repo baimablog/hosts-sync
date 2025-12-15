@@ -1,4 +1,4 @@
-name: 同步多源 hosts 并推送到 Gitee
+这是我使用的name: 同步多源 hosts 并推送到 Gitee
 
 on:
   schedule:
@@ -34,7 +34,7 @@ jobs:
           curl -X PATCH \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/actions/workflows/update-hosts.yml \
+            https://api.github.com/repos/ ${{ github.repository }}/actions/workflows/update-hosts.yml \
             -d "{\"schedule\":[{\"cron\":\"$u_m $u_h * * *\"}]}"
 
       - name: Checkout self
@@ -68,6 +68,6 @@ jobs:
         uses: Yikun/hub-mirror-action@master
         with:
           src: 'github/${{ github.repository }}'
-          dst: 'gitee/${{ github.repository }}'
+          dst: 'gitee/${{ gitee.repository }}'
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           static_list: ${{ github.ref_name }}
