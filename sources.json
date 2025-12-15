@@ -1,3 +1,5 @@
 {
-  "github": "https://gitlab.com/ineo6/hosts/-/raw/master/hosts"
+  "github": "https://gitlab.com/ineo6/hosts/-/raw/master/hosts",
+  "adaway": "https://adaway.org/hosts.txt",
+  "AdguardDNS": "https://raw.githubusercontent.com/r-a-y/mobile-hosts/master/AdguardDNS.txt"
 }
