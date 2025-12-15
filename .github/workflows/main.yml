@@ -1,4 +1,4 @@
-这是我使用的name: 同步多源 hosts 并推送到 Gitee
+name: 同步多源 hosts 并推送到 Gitee
 
 on:
   schedule:
