@@ -67,7 +67,7 @@ jobs:
       - name: 镜像到 Gitee
         uses: Yikun/hub-mirror-action@master
         with:
-          src: 'github/baimablog/hosts-sync'
-          dst: 'gitee/debug404/hosts-sync'
+          src_repo: ${{ github.repository }}          # 自动= owner/repo
+          dst_repo: ${{ gitee giee.reposito
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           static_list: ${{ github.ref_name }}
