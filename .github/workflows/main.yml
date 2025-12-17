@@ -3,7 +3,7 @@ name: 同步多源 hosts 并推送到 Gitee
 on:
   schedule:
     # 下面这一行会被脚本动态改成 UTC 时间，无需手动算
-    - cron: "0 0 23 * * ?"
+    - cron: "0 15 * * *"
   workflow_dispatch:
     inputs:
       run_now:
