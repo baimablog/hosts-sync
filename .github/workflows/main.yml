@@ -34,7 +34,7 @@ jobs:
           curl -X PATCH \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{github.repository}}/actions/workflows/${{github.workflow_ref##*/}}.yml \
+            https://api.github.com/repos/${{github.repository}}/actions/workflows/main.yml \
             -d "{\"schedule\":[{\"cron\":\"$u_m $u_h * * *\"}]}"
 
       - name: Checkout self
