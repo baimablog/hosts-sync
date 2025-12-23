@@ -31,8 +31,10 @@ jobs:
           for name in ${{ steps.sources.outputs.list }}; do
             url=$(jq -r ".[\"$name\"]" sources.json)
             echo ">>> 获取 $name  from $url"
-            curl -fsSL "$url" -o "$name" || echo "# 下载失败：$name" > "$name"
-            echo -e "\n# Update: $(date '+%F %T')\n# Source: $url" >> "$name"
+            {
+              curl -fsSL "$url" || echo "# 下载失败：$name"
+              echo -e "\n# Update: $(date '+%F %T')\n# Source: $url"
+            } > "$name"
           done
 
       - name: 提交到 GitHub
